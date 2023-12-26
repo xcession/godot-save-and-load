@@ -19,7 +19,7 @@ func _ready():
 
 # Check for existing save directory
 func data_dir_check():
-	var dir = Directory.new()
+	var dir: DirAccess = DirAccess.open(DATA_DIR)
 	if !dir.dir_exists(DATA_DIR):
 		return false
 	else:
@@ -28,7 +28,7 @@ func data_dir_check():
 
 # Check for existing save file
 func data_file_check():
-	var file = File.new()
+	var file: FileAccess = FileAccess.open(FILE_NAME, FileAccess.READ)
 	if !file.file_exists(FILE_NAME):
 		file.close()
 		return false
@@ -39,28 +39,25 @@ func data_file_check():
 
 # Create a save directory
 func data_dir_create():
-	var dir = Directory.new()
+	var dir: DirAccess = DirAccess.open(DATA_DIR)
 	if !dir.dir_exists(DATA_DIR):
 		dir.make_dir_recursive(DATA_DIR)
 
 
 # Save data
 func data_save():
-	var file = File.new()
 	# Save player data with encryption pass
-	var error = file.open_encrypted_with_pass(FILE_NAME, File.WRITE, PWD)
-	if error == OK:
+	var file: FileAccess = FileAccess.open_encrypted_with_pass(FILE_NAME, FileAccess.WRITE, PWD)
+	if file:
 		file.store_var(player_data)
 		file.close()
 
 
 # Load data
 func data_load():
-	var file = File.new()
+	var file: FileAccess = FileAccess.open_encrypted_with_pass(FILE_NAME, FileAccess.READ, PWD)
 	if file.file_exists(FILE_NAME):
-		var error = file.open_encrypted_with_pass(FILE_NAME, File.READ, PWD)
-		if error == OK:
-			player_data = file.get_var()
-			file.close()
+		player_data = file.get_var()
+		file.close()
 	else:
 		printerr("No saved data!")

@@ -6,13 +6,15 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
+config_version=5
 
 [application]
 
 config/name="Save and Load Demo"
 run/main_scene="res://main.tscn"
-config/icon="res://icon.png"
+config/features=PackedStringArray("4.2")
+boot_splash/show_image=false
+config/icon="res://icon.svg"
 
 [autoload]
 
@@ -20,8 +22,12 @@ Data="*res://data.gd"
 
 [display]
 
-window/size/width=720
-window/size/height=380
+window/size/viewport_width=720
+window/size/viewport_height=380
+
+[filesystem]
+
+import/blender/enabled=false
 
 [physics]
 
@@ -29,5 +35,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_environment="res://default_env.tres"
 quality/driver/driver_name="GLES2"
-environment/default_environment="res://default_env.tres"

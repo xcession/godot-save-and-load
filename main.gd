@@ -1,12 +1,12 @@
 extends Control
 
 # Define nodes
-onready var player_name = $MainContainer/DataContainer/DataPanel/Container/Name
-onready var player_base = $MainContainer/DataContainer/DataPanel/Container/Base
-onready var player_job = $MainContainer/DataContainer/DataPanel/Container/Job
-onready var player_class = $MainContainer/DataContainer/DataPanel/Container/Class
-onready var console = $MainContainer/ConsolePanel/Container/Console
-onready var alert = $DialogContainer/Alert
+@onready var player_name = $MainContainer/DataContainer/DataPanel/Container/Name
+@onready var player_base = $MainContainer/DataContainer/DataPanel/Container/Base
+@onready var player_job = $MainContainer/DataContainer/DataPanel/Container/Job
+@onready var player_class = $MainContainer/DataContainer/DataPanel/Container/Class
+@onready var console = $MainContainer/ConsolePanel/Container/Console
+@onready var alert = $DialogContainer/Alert
 
 
 func _ready():
