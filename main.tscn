@@ -1,9 +1,9 @@
 [gd_scene load_steps=3 format=3 uid="uid://cwp3qitr7xooy"]
 
 [ext_resource type="Script" path="res://main.gd" id="1"]
-[ext_resource type="Theme" uid="uid://33nydptm5hsa" path="res://default_theme.tres" id="2"]
+[ext_resource type="Theme" uid="uid://day5cu7vprouq" path="res://default_theme.tres" id="2"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" node_paths=PackedStringArray("_player_name", "_player_base", "_player_job", "_player_class", "_alert", "_console")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,6 +12,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("2")
 script = ExtResource("1")
+_player_name = NodePath("MainContainer/DataContainer/DataPanel/Container/Name")
+_player_base = NodePath("MainContainer/DataContainer/DataPanel/Container/Base")
+_player_job = NodePath("MainContainer/DataContainer/DataPanel/Container/Job")
+_player_class = NodePath("MainContainer/DataContainer/DataPanel/Container/Class")
+_alert = NodePath("DialogContainer/Alert")
+_console = NodePath("MainContainer/ConsolePanel/Container/Console")
 
 [node name="MainContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -97,6 +103,8 @@ text = "Console"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+placeholder_text = "CONSOLE"
+editable = false
 context_menu_enabled = false
 shortcut_keys_enabled = false
 selecting_enabled = false
@@ -109,6 +117,8 @@ anchor_bottom = 1.0
 mouse_filter = 2
 
 [node name="Alert" type="AcceptDialog" parent="DialogContainer"]
+initial_position = 2
+size = Vector2i(100, 80)
 dialog_text = "MESSAGE"
 
 [connection signal="pressed" from="MainContainer/DataContainer/DataPanel/Container/Clear" to="." method="_on_Clear_pressed"]

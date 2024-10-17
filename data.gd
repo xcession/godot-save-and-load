@@ -1,63 +1,48 @@
+class_name Data
 extends Node
 
-# Define save directory
-const DATA_DIR = "user://saves/"
-
-# Define save file name
-const FILE_NAME = DATA_DIR + "save.dat"
-
-# Define encryption password
-const PWD = "iddqd"
-
-# Initialize empty player data dictionary
-var player_data = {}
+var player_data = {}  ## Player data.
 
 
-func _ready():
-	pass
+## Check if the save directory exists.
+func dir_exists(path: String, dir_name: String) -> bool:
+	print("[Path: " + path + dir_name + "]")
+	var dir: DirAccess = DirAccess.open(path)
+	return dir.dir_exists(dir_name)
 
 
-# Check for existing save directory
-func data_dir_check():
-	var dir: DirAccess = DirAccess.open(DATA_DIR)
-	if !dir.dir_exists(DATA_DIR):
-		return false
+## Check if the save file exists.
+func file_exists(path: String) -> bool:
+	print("[Path: " + path + "]")
+	return FileAccess.file_exists(path)
+
+
+## Create the save directory.
+func dir_create(path: String, dir_name: String):
+	print("[Path: " + path + dir_name + "]")
+	var dir: DirAccess = DirAccess.open(path)
+	if dir:
+		dir.make_dir_recursive(dir_name)
 	else:
-		return true
+		printerr("An error occurred when trying to access the path.")
 
 
-# Check for existing save file
-func data_file_check():
-	var file: FileAccess = FileAccess.open(FILE_NAME, FileAccess.READ)
-	if !file.file_exists(FILE_NAME):
-		file.close()
-		return false
-	else:
-		file.close()
-		return true
-
-
-# Create a save directory
-func data_dir_create():
-	var dir: DirAccess = DirAccess.open(DATA_DIR)
-	if !dir.dir_exists(DATA_DIR):
-		dir.make_dir_recursive(DATA_DIR)
-
-
-# Save data
-func data_save():
+## Save data to file.
+func save(path: String, password: String, data: Dictionary):
+	print("[Path: " + path + "]")
 	# Save player data with encryption pass
-	var file: FileAccess = FileAccess.open_encrypted_with_pass(FILE_NAME, FileAccess.WRITE, PWD)
+	var file: FileAccess = FileAccess.open_encrypted_with_pass(path, FileAccess.WRITE, password)
 	if file:
-		file.store_var(player_data)
+		file.store_var(data)
 		file.close()
 
 
-# Load data
-func data_load():
-	var file: FileAccess = FileAccess.open_encrypted_with_pass(FILE_NAME, FileAccess.READ, PWD)
-	if file.file_exists(FILE_NAME):
+## Load data from file.
+func load(path: String, password: String):
+	var file: FileAccess = FileAccess.open_encrypted_with_pass(path, FileAccess.READ, password)
+	if file_exists(path):
 		player_data = file.get_var()
 		file.close()
+		return player_data
 	else:
 		printerr("No saved data!")

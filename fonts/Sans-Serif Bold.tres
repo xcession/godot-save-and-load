@@ -1,0 +1,5 @@
+[gd_resource type="SystemFont" format=3 uid="uid://io55srvhuff"]
+
+[resource]
+font_names = PackedStringArray("Sans-Serif")
+font_weight = 700

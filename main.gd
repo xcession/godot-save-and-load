@@ -1,102 +1,122 @@
 extends Control
 
-# Define nodes
-@onready var player_name = $MainContainer/DataContainer/DataPanel/Container/Name
-@onready var player_base = $MainContainer/DataContainer/DataPanel/Container/Base
-@onready var player_job = $MainContainer/DataContainer/DataPanel/Container/Job
-@onready var player_class = $MainContainer/DataContainer/DataPanel/Container/Class
-@onready var console = $MainContainer/ConsolePanel/Container/Console
-@onready var alert = $DialogContainer/Alert
+
+# Define file and directory names.
+const PATH = "user://"
+const DIR_NAME = "saves"  ## Save directory name.
+const FILE_NAME = "save.dat"  ## Save file name.
+const FILE_PATH = PATH + DIR_NAME + "/" + FILE_NAME
+
+const PWD = "iddqd"  # Encryption password.
+
+const CLASSES = [
+	"Swordman",
+	"Acolyte",
+	"Mage",
+	"Thief",
+	"Archer",
+]
+
+# Instantiate data object.
+var data = Data.new()
 
 
-func _ready():
-	# Check for existing save data
-	console_println("Check for existing save data...")
-	var data_dir_exist = Data.data_dir_check()
-	print("Data directory exist = " + str(data_dir_exist))
-	var data_file_exist = Data.data_file_check()
-	print("Data file exist = " + str(data_file_exist))
-	# Save directory existed
-	if data_dir_exist:
-		console_print("Save directory existed.")
-		# Save file existed
-		if data_file_exist:
-			console_println("Save file existed.")
-		# Save file does not exist
-		else:
-			console_print("Save file does not exist.")
-			console_print("Creating a save file...")
-			# Create a save file
-			collect_player_data()
-			Data.data_save()
-			console_println("Save file created.")
-	# Save directory does not exist
-	else:
-		console_print("Save directory does not exist.")
-		console_print("Creating a save directory...")
-		# Create a save directory
-		Data.data_dir_create()
-		console_print("Save directory created.")
-		# Create a save file
-		collect_player_data()
-		Data.data_save()
-		console_println("Save file created.")
+# Export nodes.
+@export var _player_name: LineEdit
+@export var _player_base: SpinBox
+@export var _player_job: SpinBox
+@export var _player_class: OptionButton
+@export var _alert: AcceptDialog
+@export var _console: TextEdit
+
+
+func _ready() -> void:
+	for c in CLASSES:  # Populate the class option button.
+		_player_class.add_item(c)
 	
-	console_println("READY!")
+	_set_default_values()
+	
+	console_print("Checking for existing save data...", true)
+	if data.dir_exists(PATH, DIR_NAME):  # Save directory already exists.
+		console_print("Save directory already exists.", true)
+		if data.file_exists(FILE_PATH):  # Save file already exists.
+			console_print("Save file already exists.", true)
+		else:  # Save file does not exists.
+			console_print("Save file does not exists.", true)
+			console_print("Creating a save file...", false)
+			_collect_player_data()
+			_save_player_data()
+			console_print("Save file created.", true)
+	else:  # Save directory does not exists.
+		console_print("Save directory does not exists.", true)
+		console_print("Creating a save directory...", false)
+		data.dir_create(PATH, DIR_NAME)  # Create save directory,
+		console_print("Save directory created.", true)
+		console_print("Creating a save file...", false)
+		_collect_player_data()
+		_save_player_data()
+		console_print("Save file created.", true)
+	
+	console_print("READY!", true)
+
+
+func _set_default_values():
+	_player_name.text = ""
+	_player_base.get_line_edit().text = "1"
+	_player_job.get_line_edit().text = "1"
+	_player_class.select(0)
 
 
 func _on_Clear_pressed():
-	player_name.text = ""
-	player_base.get_line_edit().text = "1"
-	player_job.get_line_edit().text = "1"
-	player_class.text = "Acolyte"
-	console_println("Cleared.")
+	_set_default_values()
+	console_print("Cleared.", true)
 
 
 func _on_SaveButton_pressed():
-	# If player name is empty
-	if player_name.text == "":
-		alert.dialog_text = "Please enter a player name."
-		alert.popup()
+	if _player_name.text == "":  # If the player name is empty.
+		console_print("Enter a player name.", false)
+		_alert.dialog_text = "Enter a player name."
+		_alert.popup()
 	else:
-		collect_player_data()
-		Data.data_save()
-		console_print("Data saved.")
-		console_println(Data.player_data)
+		_collect_player_data()
+		_save_player_data()
+		console_print("Data saved.", false)
+		console_print(str(data.player_data), true)
 
 
 func _on_LoadButton_pressed():
-	Data.data_load()
-	player_name.text = Data.player_data["name"]
-	player_base.get_line_edit().text = str(Data.player_data["level"]["base"])
-	player_job.get_line_edit().text = str(Data.player_data["level"]["job"])
-	player_class.text = Data.player_data["class"]
-	console_print("Data loaded.")
-	console_println(Data.player_data)
+	data.load(FILE_PATH, PWD)  # Load player data from file.
+	_player_name.text = data.player_data["name"]
+	_player_base.get_line_edit().text = str(data.player_data["level"]["base"])
+	_player_job.get_line_edit().text = str(data.player_data["level"]["job"])
+	_player_class.select(data.player_data["class"])
+	console_print("Data loaded.", false)
+	console_print(str(data.player_data), true)
 
 
-# Collect player data
-func collect_player_data():
-	Data.player_data = {
-			"name": player_name.text,
+# Collect player data.
+func _collect_player_data():
+	data.player_data = {
+			"name": _player_name.text,
 			"level": {
-				"base": int(player_base.get_line_edit().text),
-				"job": int(player_job.get_line_edit().text),
+				"base": int(_player_base.get_line_edit().text),
+				"job": int(_player_job.get_line_edit().text),
 			},
-			"class": player_class.text,
+			"class": _player_class.selected,
 		}
 
 
-# Console print
-func console_print(value):
-	console.text += str(value) + "\n"
-	# Auto scroll
-	console.scroll_vertical = INF
+# Save player data to file.
+func _save_player_data():
+	data.save(FILE_PATH, PWD, data.player_data)
 
 
-# Console print with separator
-func console_println(value):
-	console.text += str(value) + "\n"
-	console.text += "----------\n"
-	# Auto scroll
-	console.scroll_vertical = INF
+# Print text on the console.
+func console_print(value: String, with_separator: bool) -> void:
+	var separator = "----------"
+	print(value)
+	_console.text += value + "\n"
+	if with_separator:
+		print(separator)
+		_console.text += separator + "\n"
+	_console.scroll_vertical = INF  # Auto scroll

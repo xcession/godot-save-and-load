@@ -12,13 +12,9 @@ config_version=5
 
 config/name="Save and Load Demo"
 run/main_scene="res://main.tscn"
-config/features=PackedStringArray("4.2")
+config/features=PackedStringArray("4.3")
 boot_splash/show_image=false
 config/icon="res://icon.svg"
-
-[autoload]
-
-Data="*res://data.gd"
 
 [display]
 
@@ -36,5 +32,4 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
-environment/defaults/default_environment="res://default_env.tres"
 quality/driver/driver_name="GLES2"
