@@ -44,8 +44,7 @@ func _ready() -> void:
 		else:  # Save file does not exists.
 			console_print("Save file does not exists.", true)
 			console_print("Creating a save file...", false)
-			_collect_player_data()
-			_save_player_data()
+			_save_player_data(_get_player_data())
 			console_print("Save file created.", true)
 	else:  # Save directory does not exists.
 		console_print("Save directory does not exists.", true)
@@ -53,8 +52,7 @@ func _ready() -> void:
 		data.dir_create(PATH, DIR_NAME)  # Create save directory,
 		console_print("Save directory created.", true)
 		console_print("Creating a save file...", false)
-		_collect_player_data()
-		_save_player_data()
+		_save_player_data(_get_player_data())
 		console_print("Save file created.", true)
 	
 	console_print("READY!", true)
@@ -78,25 +76,25 @@ func _on_SaveButton_pressed() -> void:
 		_alert.dialog_text = "Enter a player name."
 		_alert.popup()
 	else:
-		_collect_player_data()
-		_save_player_data()
+		var _player_data = _get_player_data()
+		_save_player_data(_player_data)
 		console_print("Data saved.", false)
-		console_print(str(data.player_data), true)
+		console_print(str(_player_data), true)
 
 
-	data.load(FILE_PATH, PWD)  # Load player data from file.
-	_player_name.text = data.player_data["name"]
-	_player_base.get_line_edit().text = str(data.player_data["level"]["base"])
-	_player_job.get_line_edit().text = str(data.player_data["level"]["job"])
-	_player_class.select(data.player_data["class"])
 func _on_LoadButton_pressed() -> void:
+	var _player_data = data.load(FILE_PATH, PWD)  # Load player data from file.
+	_player_name.text = _player_data["name"]
+	_player_base.get_line_edit().text = str(_player_data["level"]["base"])
+	_player_job.get_line_edit().text = str(_player_data["level"]["job"])
+	_player_class.select(_player_data["class"])
 	console_print("Data loaded.", false)
-	console_print(str(data.player_data), true)
+	console_print(str(_player_data), true)
 
 
 # Collect player data.
-func _collect_player_data():
-	data.player_data = {
+func _get_player_data() -> Dictionary:
+	return {
 			"name": _player_name.text,
 			"level": {
 				"base": int(_player_base.get_line_edit().text),
@@ -107,8 +105,8 @@ func _collect_player_data():
 
 
 # Save player data to file.
-func _save_player_data():
-	data.save(FILE_PATH, PWD, data.player_data)
+func _save_player_data(player_data: Dictionary) -> void:
+	data.save(FILE_PATH, PWD, player_data)
 
 
 # Print text on the console.

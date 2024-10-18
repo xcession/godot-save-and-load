@@ -1,8 +1,6 @@
 class_name Data
 extends Node
 
-var player_data = {}  ## Player data.
-
 
 ## Check if the save directory exists.
 func dir_exists(path: String, dir_name: String) -> bool:
@@ -41,7 +39,7 @@ func save(path: String, password: String, data: Dictionary):
 func load(path: String, password: String):
 	var file: FileAccess = FileAccess.open_encrypted_with_pass(path, FileAccess.READ, password)
 	if file_exists(path):
-		player_data = file.get_var()
+		var player_data = file.get_var()
 		file.close()
 		return player_data
 	else:
