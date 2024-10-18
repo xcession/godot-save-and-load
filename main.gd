@@ -119,4 +119,4 @@ func console_print(value: String, with_separator: bool) -> void:
 	if with_separator:
 		print(separator)
 		_console.text += separator + "\n"
-	_console.scroll_vertical = INF  # Auto scroll
+	_console.set_v_scroll(_console.get_line_count())  # Auto scroll
