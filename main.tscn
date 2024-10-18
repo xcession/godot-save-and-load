@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cwp3qitr7xooy"]
 
-[ext_resource type="Script" path="res://main.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
 [ext_resource type="Theme" uid="uid://day5cu7vprouq" path="res://default_theme.tres" id="2"]
 
 [node name="Control" type="Control" node_paths=PackedStringArray("_player_name", "_player_base", "_player_job", "_player_class", "_alert", "_console")]
