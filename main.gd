@@ -2,14 +2,14 @@ extends Control
 
 
 # Define file and directory names.
-const PATH = "user://"
-const DIR_NAME = "saves"  ## Save directory name.
-const FILE_NAME = "save.dat"  ## Save file name.
-const FILE_PATH = PATH + DIR_NAME + "/" + FILE_NAME
+const PATH: String = "user://"
+const DIR_NAME: String = "saves"  ## Save directory name.
+const FILE_NAME: String = "save.dat"  ## Save file name.
+const FILE_PATH: String = PATH + DIR_NAME + "/" + FILE_NAME
 
-const PWD = "iddqd"  # Encryption password.
+const PWD: String = "iddqd"  # Encryption password.
 
-const CLASSES = [
+const CLASSES: Array = [
 	"Swordman",
 	"Acolyte",
 	"Mage",
@@ -60,19 +60,19 @@ func _ready() -> void:
 	console_print("READY!", true)
 
 
-func _set_default_values():
+func _set_default_values() -> void:
 	_player_name.text = ""
 	_player_base.get_line_edit().text = "1"
 	_player_job.get_line_edit().text = "1"
 	_player_class.select(0)
 
 
-func _on_Clear_pressed():
+func _on_Clear_pressed() -> void:
 	_set_default_values()
 	console_print("Cleared.", true)
 
 
-func _on_SaveButton_pressed():
+func _on_SaveButton_pressed() -> void:
 	if _player_name.text == "":  # If the player name is empty.
 		console_print("Enter a player name.", false)
 		_alert.dialog_text = "Enter a player name."
@@ -84,12 +84,12 @@ func _on_SaveButton_pressed():
 		console_print(str(data.player_data), true)
 
 
-func _on_LoadButton_pressed():
 	data.load(FILE_PATH, PWD)  # Load player data from file.
 	_player_name.text = data.player_data["name"]
 	_player_base.get_line_edit().text = str(data.player_data["level"]["base"])
 	_player_job.get_line_edit().text = str(data.player_data["level"]["job"])
 	_player_class.select(data.player_data["class"])
+func _on_LoadButton_pressed() -> void:
 	console_print("Data loaded.", false)
 	console_print(str(data.player_data), true)
 
