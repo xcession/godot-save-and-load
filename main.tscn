@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cwp3qitr7xooy"]
+[gd_scene load_steps=4 format=3 uid="uid://cwp3qitr7xooy"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1"]
 [ext_resource type="Theme" uid="uid://day5cu7vprouq" path="res://default_theme.tres" id="2"]
+[ext_resource type="SystemFont" uid="uid://bg57eie1ldv8s" path="res://fonts/Monospace.tres" id="3_rcrji"]
 
 [node name="Control" type="Control" node_paths=PackedStringArray("_player_name", "_player_base", "_player_job", "_player_class", "_alert", "_console")]
 layout_mode = 3
@@ -103,6 +104,8 @@ text = "Console"
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("3_rcrji")
+theme_override_font_sizes/font_size = 12
 placeholder_text = "CONSOLE"
 editable = false
 context_menu_enabled = false
